@@ -1,6 +1,6 @@
+trojan://humanity@45.130.125.160:443?type=ws&security=tls&path=%2Fassignment&host=www.calmlunch.com&sni=www.calmlunch.com&allowInsecure=0#
+vless://4e783787-4de7-51de-ae32-01ce7203b838@185.171.202.76:42652?allowInsecure=1&alpn=h2%2Chttp%2F1.1&encryption=none&fp=firefox&host=omm.kotlet.org&mode=stream-one&path=%2Fskkwkqknsjejejwj&security=tls&sni=yahoo.com&type=xhttp#%F0%9F%92%9912@oneclickvpnkeys
+vless://394f6981-a782-4779-9a85-e6cf22935d93@84.17.37.19:8443?allowInsecure=1&alpn=h2&encryption=none&security=tls&sni=hkg1.fromblancwithlove.com&type=tcp#%F0%9F%90%8D98@oneclickvpnkeys
 ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpvWklvQTY5UTh5aGNRVjhrYTNQYTNB@82.38.31.35:8080?type=tcp#%40V2raysCollector%20%E2%98%83%EF%B8%8F
-vmess://eyJhZGQiOiAiMTA0LjE3Ljc3Ljc3IiwgImlkIjogIjYwNDQxNTQ4LWI2OGUtNDNiMi04MTkxLWUzYjg4NGJlNGIzYyIsICJwb3J0IjogIjg0NDMiLCAic2N5IjogIm5vbmUiLCAidiI6ICIyIiwgIm5ldCI6ICJ3cyIsICJob3N0IjogInYycmF5MS5kb3phcHAueHl6IiwgInBhdGgiOiAiL2xNbnNaVU40LyIsICJ0bHMiOiAidGxzIiwgImFscG4iOiAiIiwgImZwIjogIiIsICJzbmkiOiAidjJyYXkxLmRvemFwcC54eXoiLCAicHMiOiAiVGVsZWdyYW06QGNvbmZpZ19wcm94eSDwn5SlIiwgImFpZCI6ICIwIiwgInR5cGUiOiAibm9uZSJ9
-vmess://eyJ2IjogIjIiLCAiYWRkIjogIjEwNC4xNy43Ny43NyIsICJwb3J0IjogIjg0NDMiLCAiaWQiOiAiNjA0NDE1NDgtYjY4ZS00M2IyLTgxOTEtZTNiODg0YmU0YjNjIiwgImFpZCI6ICIwIiwgIm5ldCI6ICJ3cyIsICJ0eXBlIjogIndzIiwgImhvc3QiOiAiIiwgInBhdGgiOiAiL2xNbnNaVU40LyIsICJ0bHMiOiAidGxzIiwgInNuaSI6ICJ2MnJheTEuZG96YXBwLnh5eiIsICJwcyI6ICJUZWxlZ3JhbTpAY29uZmlnX3Byb3h5IPCflKUiLCAic2N5IjogImF1dG8iLCAiYWxwbiI6ICIiLCAiZnAiOiAiIn0=
+trojan://humanity@185.18.250.245:443?type=ws&security=tls&path=%2Fassignment&host=www.calmlunch.com&sni=www.calmlunch.com&fp=random&allowInsecure=1#%40V2raysCollector%20%F0%9F%92%96
 ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTprMWRCT21PQjRvcWk3VW1wMzdhMWJR@82.38.31.176:8080#United+Kingdom
-ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTprMWRCT21PQjRvcWk3VW1wMzdhMWJR@82.38.31.210:8080#United+Kingdom
-ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTprMWRCT21PQjRvcWk3VW1wMzdhMWJR@82.38.31.214:8080#United+Kingdom
