@@ -1,5 +1,9 @@
-trojan://UX82473651@prime-corgi.rooster465.autos:443#%F0%9F%87%AF%F0%9F%87%B5%20JP_32
-trojan://UX82473651@winning-marten.rooster465.autos:443#%F0%9F%87%AF%F0%9F%87%B5%20JP_33
-trojan://a196faa4-403e-4a8b-987a-d1789f379685@139.162.100.58:49755#%F0%9F%87%AF%F0%9F%87%B5JP_34
-trojan://1234567890@64.188.89.147:443?sni=kfm-bn0.pages.dev#%F0%9F%87%BA%F0%9F%87%B8US_61
-trojan://i99Cef@209.248.32.116:28101#%F0%9F%87%BA%F0%9F%87%B8US_62
+trojan://UX82473651@organic-caribou.rooster465.autos:443#%F0%9F%87%A6%F0%9F%87%BA%20AU_01
+trojan://UX82473651@fancy-javelin.rooster465.autos:443#%F0%9F%87%A6%F0%9F%87%BA%20AU_02
+trojan://UX82473651@dynamic-imp.rooster465.autos:443#%F0%9F%87%AF%F0%9F%87%B5%20JP_14
+trojan://UX82473651@accurate-frog.rooster465.autos:443#%F0%9F%87%AF%F0%9F%87%B5%20JP_15
+trojan://UX82473651@winning-marten.rooster465.autos:443#%F0%9F%87%AF%F0%9F%87%B5%20JP_16
+trojan://UX82473651@musical-terrier.rooster465.autos:443#%F0%9F%87%AF%F0%9F%87%B5%20JP_17
+trojan://UX82473651@prime-corgi.rooster465.autos:443#%F0%9F%87%AF%F0%9F%87%B5%20JP_18
+trojan://UX82473651@concrete-aardvark.rooster465.autos:443#%F0%9F%87%AF%F0%9F%87%B5%20JP_19
+trojan://ND91608427@18.179.31.199:443#%F0%9F%87%AF%F0%9F%87%B5JP_20
