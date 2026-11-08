@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urlparse, parse_qs
 from logging.handlers import RotatingFileHandler
 
-# Исправление бага Event Loop в Python 3.8 на Windows
+# Г€Г±ГЇГ°Г ГўГ«ГҐГ­ГЁГҐ ГЎГ ГЈГ  Event Loop Гў Python 3.8 Г­Г  Windows
 if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
@@ -34,26 +34,26 @@ except ImportError:
     YAML = None
 
 # ============================================================
-# БАЗОВЫЕ ПУТИ И КОНСТАНТЫ
+# ГЃГЂГ‡ГЋГ‚Г›Г… ГЏГ“Г’Г€ Г€ ГЉГЋГЌГ‘Г’ГЂГЌГ’Г›
 # ============================================================
 BASE_DIR = Path(__file__).resolve().parent
 LOG_DIR = BASE_DIR / "logs"
 LOG_FILE = LOG_DIR / "proxy_test.log"
 LOCK_FILE = BASE_DIR / "proxy_test.lock"
 
-API_ID = 21496880
-API_HASH = '5f48a51682c865f8a64c962481d3d76d'
+API_ID = 22299988
+API_HASH = '55555555555888888888888881111111'
 SESSION_NAME = 'telegram_session' 
 SESSION_FILE = BASE_DIR / f"{SESSION_NAME}.session"
-PHONE = '+79127284081'          # ВАШ номер в межд. формате (для первичной авторизации)
-DEVICE_MODEL = 'BookDownloader'    # Имя, которое будет видно в "Активных сеансах" Telegram
+PHONE = '+79999222222'          # Р’РђРЁ РЅРѕРјРµСЂ РІ РјРµР¶Рґ. С„РѕСЂРјР°С‚Рµ (РґР»СЏ РїРµСЂРІРёС‡РЅРѕР№ Р°РІС‚РѕСЂРёР·Р°С†РёРё)
+DEVICE_MODEL = 'test_proxy'    # РРјСЏ, РєРѕС‚РѕСЂРѕРµ Р±СѓРґРµС‚ РІРёРґРЅРѕ РІ "РђРєС‚РёРІРЅС‹С… СЃРµР°РЅСЃР°С…" Telegram
 
-# --- ПАРАМЕТРЫ ПОИСКА ---
-# Номер телефона ЦЕЛЕВОГО чата, в котором ищем файл (с плюсом)
-TARGET_PHONE = '+79226630393'  
-TARGET_FILE_NAME = '3. Стратегическая необходимость.fb2'
+# --- РџРђР РђРњР•РўР Р« РџРћРРЎРљРђ ---
+# РќРѕРјРµСЂ С‚РµР»РµС„РѕРЅР° Р¦Р•Р›Р•Р’РћР“Рћ С‡Р°С‚Р°, РІ РєРѕС‚РѕСЂРѕРј РёС‰РµРј С„Р°Р№Р» (СЃ РїР»СЋСЃРѕРј)
+TARGET_PHONE = '+79996666333'  
+TARGET_FILE_NAME = '3. РЎС‚СЂР°С‚РµРіРёС‡РµСЃРєР°СЏ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ.fb2'
 
-# Таймауты (CONNECT_TIMEOUT уменьшен для быстрых отбраковок)
+# Г’Г Г©Г¬Г ГіГІГ» (CONNECT_TIMEOUT ГіГ¬ГҐГ­ГјГёГҐГ­ Г¤Г«Гї ГЎГ»Г±ГІГ°Г»Гµ Г®ГІГЎГ°Г ГЄГ®ГўГ®ГЄ)
 CONNECT_TIMEOUT = 15.0
 PRECHECK_TIMEOUT = 5.0
 SEARCH_TIMEOUT = 30.0
@@ -62,12 +62,12 @@ DOWNLOAD_RETRIES = 2
 REPLACE_RETRIES = 5
 REPLACE_BASE_DELAY = 0.7
 
-# Анти-бан задержки
+# ГЂГ­ГІГЁ-ГЎГ Г­ Г§Г Г¤ГҐГ°Г¦ГЄГЁ
 DELAY_MIN = 1.5
 DELAY_MAX = 5.0
 FLOOD_MAX_SLEEP = 30.0
 
-# Разрешенные порты для 127.0.0.1
+# ГђГ Г§Г°ГҐГёГҐГ­Г­Г»ГҐ ГЇГ®Г°ГІГ» Г¤Г«Гї 127.0.0.1
 ALLOWED_LOOPBACK_PORTS = {1080, 2080, 1443, 4545, 9050, 2090}
 
 CONFIG_PATH = Path(__file__).resolve().parent.parent / 'telegram_media_downloader' / 'config.yaml'
@@ -78,14 +78,14 @@ _LOCK_HANDLE = None
 logger = logging.getLogger("proxy_test")
 
 # ============================================================
-# ЛОГИРОВАНИЕ И МАСКИРОВАНИЕ СЕКРЕТОВ
+# Г‹ГЋГѓГ€ГђГЋГ‚ГЂГЌГ€Г… Г€ ГЊГЂГ‘ГЉГ€ГђГЋГ‚ГЂГЌГ€Г… Г‘Г…ГЉГђГ…Г’ГЋГ‚
 # ============================================================
 USERPASS_RE = re.compile(r"((?:socks[45]|http|https)://[^:/@]+:)[^@]+(@)", re.IGNORECASE)
 MTPROTO_SECRET_RE = re.compile(r"(mtproto://[^:/]+:\d+:)\S+", re.IGNORECASE)
 KV_SECRET_RE = re.compile(r"(?i)(password|pass|secret|api_hash)(\s*[:=]\s*)\S+")
 
 class RedactingFormatter(logging.Formatter):
-    """Маскирует пароли и секреты в логах, оставляя адреса и порты."""
+    """ГЊГ Г±ГЄГЁГ°ГіГҐГІ ГЇГ Г°Г®Г«ГЁ ГЁ Г±ГҐГЄГ°ГҐГІГ» Гў Г«Г®ГЈГ Гµ, Г®Г±ГІГ ГўГ«ГїГї Г Г¤Г°ГҐГ±Г  ГЁ ГЇГ®Г°ГІГ»."""
     def format(self, record: logging.LogRecord) -> str:
         msg = super().format(record)
         msg = USERPASS_RE.sub(r"\1***\2", msg)
@@ -94,7 +94,7 @@ class RedactingFormatter(logging.Formatter):
         return msg
 
 def setup_logging(level: int = logging.INFO) -> None:
-    """Настраивает логирование с ротацией и выводом в консоль."""
+    """ГЌГ Г±ГІГ°Г ГЁГўГ ГҐГІ Г«Г®ГЈГЁГ°Г®ГўГ Г­ГЁГҐ Г± Г°Г®ГІГ Г¶ГЁГҐГ© ГЁ ГўГ»ГўГ®Г¤Г®Г¬ Гў ГЄГ®Г­Г±Г®Г«Гј."""
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     root = logging.getLogger()
     root.setLevel(level)
@@ -112,12 +112,12 @@ def setup_logging(level: int = logging.INFO) -> None:
     ch.setFormatter(formatter)
     root.addHandler(ch)
 
-    # Не глушим ошибки Telethon, а пишем их в лог
+    # ГЌГҐ ГЈГ«ГіГёГЁГ¬ Г®ГёГЁГЎГЄГЁ Telethon, Г  ГЇГЁГёГҐГ¬ ГЁГµ Гў Г«Г®ГЈ
     logging.getLogger('telethon').setLevel(logging.WARNING)
     logging.captureWarnings(True)
 
 # ============================================================
-# LOCK-ФАЙЛ (ЗАЩИТА ОТ ПАРАЛЛЕЛЬНОГО ЗАПУСКА)
+# LOCK-Г”ГЂГ‰Г‹ (Г‡ГЂГ™Г€Г’ГЂ ГЋГ’ ГЏГЂГђГЂГ‹Г‹Г…Г‹ГњГЌГЋГѓГЋ Г‡ГЂГЏГ“Г‘ГЉГЂ)
 # ============================================================
 def acquire_lock(lock_path: Path) -> bool:
     global _LOCK_HANDLE
@@ -158,7 +158,7 @@ def release_lock() -> None:
         _LOCK_HANDLE = None
 
 # ============================================================
-# ПОДАВЛЕНИЕ СЛУЖЕБНЫХ ОШИБОК ASYNCIO (WINDOWS)
+# ГЏГЋГ„ГЂГ‚Г‹Г…ГЌГ€Г… Г‘Г‹Г“Г†Г…ГЃГЌГ›Г• ГЋГГ€ГЃГЋГЉ ASYNCIO (WINDOWS)
 # ============================================================
 def _silent_exception_handler(loop, context):
     exc = context.get('exception')
@@ -171,7 +171,7 @@ def _silent_exception_handler(loop, context):
     loop.default_exception_handler(context)
 
 # ============================================================
-# ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ ПРОКСИ
+# Г‚Г‘ГЏГЋГЊГЋГѓГЂГ’Г…Г‹ГњГЌГ›Г… Г”Г“ГЌГЉГ–Г€Г€ Г„Г‹Гџ ГЏГђГЋГЉГ‘Г€
 # ============================================================
 def get_proxy_endpoint(proxy_info: Dict[str, Any]) -> Tuple[Optional[str], Optional[int]]:
     args = proxy_info.get("args", {})
@@ -186,7 +186,7 @@ def get_proxy_endpoint(proxy_info: Dict[str, Any]) -> Tuple[Optional[str], Optio
         return None, None
 
 def safe_proxy_label(proxy_info: Dict[str, Any]) -> str:
-    """Возвращает безопасную метку для лога (без паролей)."""
+    """Г‚Г®Г§ГўГ°Г Г№Г ГҐГІ ГЎГҐГ§Г®ГЇГ Г±Г­ГіГѕ Г¬ГҐГІГЄГі Г¤Г«Гї Г«Г®ГЈГ  (ГЎГҐГ§ ГЇГ Г°Г®Г«ГҐГ©)."""
     p_type = str(proxy_info.get("type", "UNKNOWN"))
     host, port = get_proxy_endpoint(proxy_info)
     if host and port:
@@ -202,7 +202,7 @@ def host_is_loopback(host: str) -> bool:
         return False
 
 def validate_proxy_endpoint(host: Optional[str], port: Optional[int]) -> Tuple[bool, Optional[str]]:
-    """Проверяет хост и порт на безопасность."""
+    """ГЏГ°Г®ГўГҐГ°ГїГҐГІ ГµГ®Г±ГІ ГЁ ГЇГ®Г°ГІ Г­Г  ГЎГҐГ§Г®ГЇГ Г±Г­Г®Г±ГІГј."""
     if not host: return False, "empty host"
     host_clean = str(host).strip().lower().strip("[]")
     if not host_clean or any(ch.isspace() for ch in host_clean): return False, "invalid host"
@@ -217,7 +217,7 @@ def validate_proxy_endpoint(host: Optional[str], port: Optional[int]) -> Tuple[b
     return True, None
 
 def parse_proxy_line(line: str):
-    """Парсит строку прокси разных форматов."""
+    """ГЏГ Г°Г±ГЁГІ Г±ГІГ°Г®ГЄГі ГЇГ°Г®ГЄГ±ГЁ Г°Г Г§Г­Г»Гµ ГґГ®Г°Г¬Г ГІГ®Гў."""
     line = line.strip()
     if not line or line.startswith('#'):
         return None
@@ -292,39 +292,39 @@ def parse_proxy_line(line: str):
     return None
 
 # ============================================================
-# ПЕРВИЧНАЯ АВТОРИЗАЦИЯ (ОСТАВЛЕНА ДЛЯ РУЧНОГО ВЫЗОВА)
+# ГЏГ…ГђГ‚Г€Г—ГЌГЂГџ ГЂГ‚Г’ГЋГђГ€Г‡ГЂГ–Г€Гџ (ГЋГ‘Г’ГЂГ‚Г‹Г…ГЌГЂ Г„Г‹Гџ ГђГ“Г—ГЌГЋГѓГЋ Г‚Г›Г‡ГЋГ‚ГЂ)
 # ============================================================
 async def authorize_client(client: TelegramClient) -> bool:
-    """Первичная авторизация (запрос кода и 2FA). В тестах не используется."""
+    """ГЏГҐГ°ГўГЁГ·Г­Г Гї Г ГўГІГ®Г°ГЁГ§Г Г¶ГЁГї (Г§Г ГЇГ°Г®Г± ГЄГ®Г¤Г  ГЁ 2FA). Г‚ ГІГҐГ±ГІГ Гµ Г­ГҐ ГЁГ±ГЇГ®Г«ГјГ§ГіГҐГІГ±Гї."""
     loop = asyncio.get_running_loop()
     try:
         await client.send_code_request(PHONE)
     except FloodWaitError as fw:
-        logger.warning("FloodWait при запросе кода: %d сек", fw.seconds)
+        logger.warning("FloodWait ГЇГ°ГЁ Г§Г ГЇГ°Г®Г±ГҐ ГЄГ®Г¤Г : %d Г±ГҐГЄ", fw.seconds)
         await asyncio.sleep(min(fw.seconds, 300))
         try: await client.send_code_request(PHONE)
-        except Exception as e: logger.error("Не удалось запросить код: %s", e); return False
+        except Exception as e: logger.error("ГЌГҐ ГіГ¤Г Г«Г®Г±Гј Г§Г ГЇГ°Г®Г±ГЁГІГј ГЄГ®Г¤: %s", e); return False
     except Exception as e:
-        logger.error("Не удалось запросить код: %s", e); return False
+        logger.error("ГЌГҐ ГіГ¤Г Г«Г®Г±Гј Г§Г ГЇГ°Г®Г±ГЁГІГј ГЄГ®Г¤: %s", e); return False
 
-    try: code = await loop.run_in_executor(None, input, "Введите код из Telegram: ")
+    try: code = await loop.run_in_executor(None, input, "Г‚ГўГҐГ¤ГЁГІГҐ ГЄГ®Г¤ ГЁГ§ Telegram: ")
     except Exception: return False
 
     try:
         await client.sign_in(PHONE, code.strip())
     except SessionPasswordNeededError:
-        logger.info("Требуется пароль 2FA.")
-        try: pwd = await loop.run_in_executor(None, input, "Введите пароль 2FA: ")
+        logger.info("Г’Г°ГҐГЎГіГҐГІГ±Гї ГЇГ Г°Г®Г«Гј 2FA.")
+        try: pwd = await loop.run_in_executor(None, input, "Г‚ГўГҐГ¤ГЁГІГҐ ГЇГ Г°Г®Г«Гј 2FA: ")
         except Exception: return False
         try: await client.sign_in(password=pwd.strip())
-        except Exception as e: logger.error("Ошибка пароля 2FA: %s", e); return False
+        except Exception as e: logger.error("ГЋГёГЁГЎГЄГ  ГЇГ Г°Г®Г«Гї 2FA: %s", e); return False
     except Exception as e:
-        logger.error("Ошибка авторизации: %s", e); return False
+        logger.error("ГЋГёГЁГЎГЄГ  Г ГўГІГ®Г°ГЁГ§Г Г¶ГЁГЁ: %s", e); return False
 
     return await client.is_user_authorized()
 
 # ============================================================
-# ПРОВЕРКА TCP И ЗАДЕРЖКИ
+# ГЏГђГЋГ‚Г…ГђГЉГЂ TCP Г€ Г‡ГЂГ„Г…ГђГ†ГЉГ€
 # ============================================================
 async def precheck_proxy(proxy_info: Dict[str, Any]) -> Tuple[bool, Optional[str]]:
     if proxy_info.get('type') == 'DIRECT': return True, None
@@ -340,38 +340,38 @@ async def precheck_proxy(proxy_info: Dict[str, Any]) -> Tuple[bool, Optional[str
 
 async def random_delay(min_s: float, max_s: float) -> None:
     delay = random.uniform(min_s, max_s)
-    logger.debug("Случайная задержка: %.2f сек", delay)
+    logger.debug("Г‘Г«ГіГ·Г Г©Г­Г Гї Г§Г Г¤ГҐГ°Г¦ГЄГ : %.2f Г±ГҐГЄ", delay)
     await asyncio.sleep(delay)
 
 # ============================================================
-# РАБОТА С ФАЙЛАМИ (БЭКАПЫ И АТОМАРНАЯ ЗАПИСЬ)
+# ГђГЂГЃГЋГ’ГЂ Г‘ Г”ГЂГ‰Г‹ГЂГЊГ€ (ГЃГќГЉГЂГЏГ› Г€ ГЂГ’ГЋГЊГЂГђГЌГЂГџ Г‡ГЂГЏГ€Г‘Гњ)
 # ============================================================
 def backup_file(path: Path) -> Optional[Path]:
     if not path.exists(): return None
     backup_path = path.with_name(path.name + ".bak")
     try:
         shutil.copy2(path, backup_path)
-        logger.info("Создан бэкап: %s", backup_path)
+        logger.info("Г‘Г®Г§Г¤Г Г­ ГЎГЅГЄГ ГЇ: %s", backup_path)
         return backup_path
     except OSError:
-        logger.exception("Ошибка создания бэкапа %s", path)
+        logger.exception("ГЋГёГЁГЎГЄГ  Г±Г®Г§Г¤Г Г­ГЁГї ГЎГЅГЄГ ГЇГ  %s", path)
         return None
 
 def replace_with_retry(src: Path, dst: Path) -> None:
-    """Заменяет dst файлом src с ретраями на случай WinError 5.
+    """Г‡Г Г¬ГҐГ­ГїГҐГІ dst ГґГ Г©Г«Г®Г¬ src Г± Г°ГҐГІГ°Г ГїГ¬ГЁ Г­Г  Г±Г«ГіГ·Г Г© WinError 5.
 
     Args:
-        src: временный файл-источник.
-        dst: целевой файл.
+        src: ГўГ°ГҐГ¬ГҐГ­Г­Г»Г© ГґГ Г©Г«-ГЁГ±ГІГ®Г·Г­ГЁГЄ.
+        dst: Г¶ГҐГ«ГҐГўГ®Г© ГґГ Г©Г«.
 
     Raises:
-        OSError: если не удалось заменить даже fallback-способом.
+        OSError: ГҐГ±Г«ГЁ Г­ГҐ ГіГ¤Г Г«Г®Г±Гј Г§Г Г¬ГҐГ­ГЁГІГј Г¤Г Г¦ГҐ fallback-Г±ГЇГ®Г±Г®ГЎГ®Г¬.
     """
     last_exc: Optional[OSError] = None
 
     for attempt in range(1, REPLACE_RETRIES + 1):
         try:
-            # Сброс атрибута "только чтение", если он вдруг стоит на цели.
+            # Г‘ГЎГ°Г®Г± Г ГІГ°ГЁГЎГіГІГ  "ГІГ®Г«ГјГЄГ® Г·ГІГҐГ­ГЁГҐ", ГҐГ±Г«ГЁ Г®Г­ ГўГ¤Г°ГіГЈ Г±ГІГ®ГЁГІ Г­Г  Г¶ГҐГ«ГЁ.
             if dst.exists():
                 try:
                     os.chmod(dst, stat.S_IRUSR | stat.S_IWUSR)
@@ -383,31 +383,31 @@ def replace_with_retry(src: Path, dst: Path) -> None:
             last_exc = exc
             delay = REPLACE_BASE_DELAY * attempt
             logger.warning(
-                "Replace %s -> %s не удался (попытка %d/%d): %s. Повтор через %.1f с",
+                "Replace %s -> %s Г­ГҐ ГіГ¤Г Г«Г±Гї (ГЇГ®ГЇГ»ГІГЄГ  %d/%d): %s. ГЏГ®ГўГІГ®Г° Г·ГҐГ°ГҐГ§ %.1f Г±",
                 src, dst, attempt, REPLACE_RETRIES, exc, delay,
             )
             time.sleep(delay)
 
-    # Fallback: удаляем цель и переименовываем.
-    # Безопасно, т.к. перед этим всегда создаётся .bak.
+    # Fallback: ГіГ¤Г Г«ГїГҐГ¬ Г¶ГҐГ«Гј ГЁ ГЇГҐГ°ГҐГЁГ¬ГҐГ­Г®ГўГ»ГўГ ГҐГ¬.
+    # ГЃГҐГ§Г®ГЇГ Г±Г­Г®, ГІ.ГЄ. ГЇГҐГ°ГҐГ¤ ГЅГІГЁГ¬ ГўГ±ГҐГЈГ¤Г  Г±Г®Г§Г¤Г ВёГІГ±Гї .bak.
     try:
         if dst.exists():
             dst.unlink()
         os.rename(src, dst)
-        logger.warning("Замена выполнена fallback-способом (unlink+rename): %s", dst)
+        logger.warning("Г‡Г Г¬ГҐГ­Г  ГўГ»ГЇГ®Г«Г­ГҐГ­Г  fallback-Г±ГЇГ®Г±Г®ГЎГ®Г¬ (unlink+rename): %s", dst)
     except OSError:
-        logger.exception("Fallback-замена не удалась; временный файл сохранён: %s", src)
+        logger.exception("Fallback-Г§Г Г¬ГҐГ­Г  Г­ГҐ ГіГ¤Г Г«Г Г±Гј; ГўГ°ГҐГ¬ГҐГ­Г­Г»Г© ГґГ Г©Г« Г±Г®ГµГ°Г Г­ВёГ­: %s", src)
         if last_exc:
             raise last_exc
 
 
 def atomic_write_text(path: Path, text: str, encoding: str) -> None:
-    """Атомарно пишет текстовый файл через .tmp + replace_with_retry.
+    """ГЂГІГ®Г¬Г Г°Г­Г® ГЇГЁГёГҐГІ ГІГҐГЄГ±ГІГ®ГўГ»Г© ГґГ Г©Г« Г·ГҐГ°ГҐГ§ .tmp + replace_with_retry.
 
     Args:
-        path: целевой путь.
-        text: содержимое.
-        encoding: кодировка записи.
+        path: Г¶ГҐГ«ГҐГўГ®Г© ГЇГіГІГј.
+        text: Г±Г®Г¤ГҐГ°Г¦ГЁГ¬Г®ГҐ.
+        encoding: ГЄГ®Г¤ГЁГ°Г®ГўГЄГ  Г§Г ГЇГЁГ±ГЁ.
     """
     tmp_path = path.with_name(path.name + ".tmp")
     with open(tmp_path, "w", encoding=encoding, errors="replace") as f:
@@ -417,7 +417,7 @@ def atomic_write_text(path: Path, text: str, encoding: str) -> None:
     replace_with_retry(tmp_path, path)
 
 # ============================================================
-# ЗАГРУЗКА ФАЙЛА С RETRY
+# Г‡ГЂГѓГђГ“Г‡ГЉГЂ Г”ГЂГ‰Г‹ГЂ Г‘ RETRY
 # ============================================================
 async def download_with_retry(client, message, timeout=DOWNLOAD_TIMEOUT, retries=DOWNLOAD_RETRIES):
     deadline = time.perf_counter() + timeout
@@ -431,23 +431,23 @@ async def download_with_retry(client, message, timeout=DOWNLOAD_TIMEOUT, retries
             if file_bytes: return file_bytes, duration, True, None
             return None, duration, False, "empty download"
         except asyncio.TimeoutError:
-            logger.warning("  [Попытка %d/%d] Таймаут скачивания.", attempt, retries)
+            logger.warning("  [ГЏГ®ГЇГ»ГІГЄГ  %d/%d] Г’Г Г©Г¬Г ГіГІ Г±ГЄГ Г·ГЁГўГ Г­ГЁГї.", attempt, retries)
             return None, 0.0, False, "download timeout"
         except FloodWaitError: raise
         except (ConnectionError, OSError) as e:
             if attempt < retries:
-                logger.warning("  [Попытка %d/%d] Обрыв (%s). Ретрай...", attempt, retries, e.__class__.__name__)
+                logger.warning("  [ГЏГ®ГЇГ»ГІГЄГ  %d/%d] ГЋГЎГ°Г»Гў (%s). ГђГҐГІГ°Г Г©...", attempt, retries, e.__class__.__name__)
                 await asyncio.sleep(random.uniform(0.3, 0.9))
                 continue
-            logger.exception("  [Попытка %d/%d] Обрыв, попытки исчерпаны.", attempt, retries)
+            logger.exception("  [ГЏГ®ГЇГ»ГІГЄГ  %d/%d] ГЋГЎГ°Г»Гў, ГЇГ®ГЇГ»ГІГЄГЁ ГЁГ±Г·ГҐГ°ГЇГ Г­Г».", attempt, retries)
             return None, 0.0, False, f"network error: {e.__class__.__name__}"
         except Exception as e:
-            logger.exception("  [Попытка %d/%d] Непредвиденная ошибка.", attempt, retries)
+            logger.exception("  [ГЏГ®ГЇГ»ГІГЄГ  %d/%d] ГЌГҐГЇГ°ГҐГ¤ГўГЁГ¤ГҐГ­Г­Г Гї Г®ГёГЁГЎГЄГ .", attempt, retries)
             return None, 0.0, False, f"unexpected: {e.__class__.__name__}"
     return None, 0.0, False, "download failed"
 
 # ============================================================
-# ТЕСТ ОДНОГО ПРОКСИ
+# Г’Г…Г‘Г’ ГЋГ„ГЌГЋГѓГЋ ГЏГђГЋГЉГ‘Г€
 # ============================================================
 async def test_single_proxy(proxy_info, index, total):
     label = safe_proxy_label(proxy_info)
@@ -460,7 +460,7 @@ async def test_single_proxy(proxy_info, index, total):
         'status': 'unknown', 'error': None, 'safe_label': label,
     }
     
-    logger.info("[Тест %d/%d] %s", index, total, label)
+    logger.info("[Г’ГҐГ±ГІ %d/%d] %s", index, total, label)
     
     ok, err = await precheck_proxy(proxy_info)
     if not ok:
@@ -487,11 +487,11 @@ async def test_single_proxy(proxy_info, index, total):
         if not await client.is_user_authorized():
             result['status'] = 'unauthorized'
             result['error'] = 'session not authorized'
-            logger.error("Сессия не авторизована!")
+            logger.error("Г‘ГҐГ±Г±ГЁГї Г­ГҐ Г ГўГІГ®Г°ГЁГ§Г®ГўГ Г­Г !")
             return result
             
-        await client.get_me() # Проверка живости сессии
-        logger.info("Подключено! Отклик (TCP): %.1f мс", conn_time)
+        await client.get_me() # ГЏГ°Г®ГўГҐГ°ГЄГ  Г¦ГЁГўГ®Г±ГІГЁ Г±ГҐГ±Г±ГЁГЁ
+        logger.info("ГЏГ®Г¤ГЄГ«ГѕГ·ГҐГ­Г®! ГЋГІГЄГ«ГЁГЄ (TCP): %.1f Г¬Г±", conn_time)
 
         async def find_message():
             async for message in client.iter_messages(TARGET_PHONE, search=TARGET_FILE_NAME):
@@ -503,54 +503,54 @@ async def test_single_proxy(proxy_info, index, total):
         if not target_message:
             result['status'] = 'file_not_found'
             result['speed'] = 0.0
-            logger.warning("Файл '%s' не найден.", TARGET_FILE_NAME)
+            logger.warning("Г”Г Г©Г« '%s' Г­ГҐ Г­Г Г©Г¤ГҐГ­.", TARGET_FILE_NAME)
             return result
 
         file_size_mb = target_message.file.size / 1024 / 1024
-        logger.info("Файл найден. Размер: %.2f MB.", file_size_mb)
+        logger.info("Г”Г Г©Г« Г­Г Г©Г¤ГҐГ­. ГђГ Г§Г¬ГҐГ°: %.2f MB.", file_size_mb)
 
         file_bytes, duration, success, dl_err = await download_with_retry(client, target_message)
         if not success or not file_bytes:
             result['status'] = 'download_failed'
             result['error'] = dl_err
-            logger.warning("Скачивание не удалось: %s", dl_err)
+            logger.warning("Г‘ГЄГ Г·ГЁГўГ Г­ГЁГҐ Г­ГҐ ГіГ¤Г Г«Г®Г±Гј: %s", dl_err)
             return result
 
         speed_mbps = (len(file_bytes) * 8) / (1024 * 1024) / duration if duration > 0 else 0.0
         result['speed'] = speed_mbps
         result['status'] = 'ok'
-        logger.info("Результат: %.2f Mbps (%.2f сек)", speed_mbps, duration)
+        logger.info("ГђГҐГ§ГіГ«ГјГІГ ГІ: %.2f Mbps (%.2f Г±ГҐГЄ)", speed_mbps, duration)
         return result
 
     except asyncio.TimeoutError:
         result['status'] = 'timeout'
         result['error'] = 'operation timeout'
-        logger.warning("Таймаут операции.")
+        logger.warning("Г’Г Г©Г¬Г ГіГІ Г®ГЇГҐГ°Г Г¶ГЁГЁ.")
         return result
     except FloodWaitError as e:
         result['status'] = 'flood_wait'
         result['error'] = f"flood_wait:{e.seconds}"
-        logger.warning("FloodWait: %d сек.", e.seconds)
+        logger.warning("FloodWait: %d Г±ГҐГЄ.", e.seconds)
         return result
     except (AuthKeyError, SessionRevokedError) as e:
         result['status'] = 'unauthorized'
         result['error'] = e.__class__.__name__
-        logger.error("Сессия недействительна: %s", e.__class__.__name__)
+        logger.error("Г‘ГҐГ±Г±ГЁГї Г­ГҐГ¤ГҐГ©Г±ГІГўГЁГІГҐГ«ГјГ­Г : %s", e.__class__.__name__)
         return result
     except (UserDeactivatedBanError, PhoneNumberBannedError) as e:
         result['status'] = 'banned'
         result['error'] = e.__class__.__name__
-        logger.error("Аккаунт забанен: %s", e.__class__.__name__)
+        logger.error("ГЂГЄГЄГ ГіГ­ГІ Г§Г ГЎГ Г­ГҐГ­: %s", e.__class__.__name__)
         return result
     except (ConnectionError, OSError):
         result['status'] = 'network_error'
         result['error'] = 'network error'
-        logger.exception("Ошибка сети.")
+        logger.exception("ГЋГёГЁГЎГЄГ  Г±ГҐГІГЁ.")
         return result
     except Exception:
         result['status'] = 'unexpected_error'
         result['error'] = 'unexpected error'
-        logger.exception("Непредвиденная ошибка.")
+        logger.exception("ГЌГҐГЇГ°ГҐГ¤ГўГЁГ¤ГҐГ­Г­Г Гї Г®ГёГЁГЎГЄГ .")
         return result
     finally:
         try:
@@ -558,7 +558,7 @@ async def test_single_proxy(proxy_info, index, total):
         except Exception: pass
 
 # ============================================================
-# ОБНОВЛЕНИЕ CONFIG.YAML (ЧЕРЕЗ RUAMEL.YAML)
+# ГЋГЃГЌГЋГ‚Г‹Г…ГЌГ€Г… CONFIG.YAML (Г—Г…ГђГ…Г‡ RUAMEL.YAML)
 # ============================================================
 def get_fastest_standard_proxy(results):
     for res in results:
@@ -578,10 +578,10 @@ def normalize_proxy(d):
 
 def update_config_yaml(new_raw: dict):
     if YAML is None:
-        logger.error("ruamel.yaml не установлен. config.yaml не обновлён.")
+        logger.error("ruamel.yaml Г­ГҐ ГіГ±ГІГ Г­Г®ГўГ«ГҐГ­. config.yaml Г­ГҐ Г®ГЎГ­Г®ГўГ«ВёГ­.")
         return
     if not CONFIG_PATH.exists():
-        logger.warning("config.yaml не найден: %s", CONFIG_PATH)
+        logger.warning("config.yaml Г­ГҐ Г­Г Г©Г¤ГҐГ­: %s", CONFIG_PATH)
         return
         
     yaml = YAML()
@@ -598,12 +598,12 @@ def update_config_yaml(new_raw: dict):
             proxy = data['proxy']
             
         if normalize_proxy(proxy) == normalize_proxy(new_raw):
-            logger.info("Лучший прокси уже прописан в конфиге.")
+            logger.info("Г‹ГіГ·ГёГЁГ© ГЇГ°Г®ГЄГ±ГЁ ГіГ¦ГҐ ГЇГ°Г®ГЇГЁГ±Г Г­ Гў ГЄГ®Г­ГґГЁГЈГҐ.")
             return
             
         backup = backup_file(CONFIG_PATH)
         if not backup:
-            logger.error("Бэкап config.yaml не удался. Обновление прервано.")
+            logger.error("ГЃГЅГЄГ ГЇ config.yaml Г­ГҐ ГіГ¤Г Г«Г±Гї. ГЋГЎГ­Г®ГўГ«ГҐГ­ГЁГҐ ГЇГ°ГҐГ°ГўГ Г­Г®.")
             return
             
         proxy['scheme'] = str(new_raw['scheme'])
@@ -629,10 +629,10 @@ def update_config_yaml(new_raw: dict):
             raise ValueError("Validation failed: proxy key missing")
             
         replace_with_retry(tmp_path, CONFIG_PATH)
-        logger.info("config.yaml обновлён: %s://%s:%s", new_raw['scheme'], new_raw['hostname'], new_raw['port'])
+        logger.info("config.yaml Г®ГЎГ­Г®ГўГ«ВёГ­: %s://%s:%s", new_raw['scheme'], new_raw['hostname'], new_raw['port'])
         
     except Exception:
-        logger.exception("Ошибка обновления config.yaml")
+        logger.exception("ГЋГёГЁГЎГЄГ  Г®ГЎГ­Г®ГўГ«ГҐГ­ГЁГї config.yaml")
         if 'tmp_path' in locals() and tmp_path.exists():
             try: tmp_path.unlink()
             except OSError: pass
@@ -644,22 +644,22 @@ async def main():
     loop = asyncio.get_running_loop()
     loop.set_exception_handler(_silent_exception_handler)
     
-    logger.info("Скрипт запущен.")
-    logger.info("Путь к config.yaml: %s", CONFIG_PATH)
+    logger.info("Г‘ГЄГ°ГЁГЇГІ Г§Г ГЇГіГ№ГҐГ­.")
+    logger.info("ГЏГіГІГј ГЄ config.yaml: %s", CONFIG_PATH)
     
     if not SESSION_FILE.exists():
-        logger.critical("Файл сессии '%s' не найден. Тестирование невозможно. Выход.", SESSION_FILE)
+        logger.critical("Г”Г Г©Г« Г±ГҐГ±Г±ГЁГЁ '%s' Г­ГҐ Г­Г Г©Г¤ГҐГ­. Г’ГҐГ±ГІГЁГ°Г®ГўГ Г­ГЁГҐ Г­ГҐГўГ®Г§Г¬Г®Г¦Г­Г®. Г‚Г»ГµГ®Г¤.", SESSION_FILE)
         return
         
     if not PROXIES_PATH.exists():
-        logger.critical("Файл proxies.txt не найден!")
+        logger.critical("Г”Г Г©Г« proxies.txt Г­ГҐ Г­Г Г©Г¤ГҐГ­!")
         return
         
     try:
         with open(PROXIES_PATH, 'r', encoding=PROXIES_ENCODING, errors='replace') as f:
             lines = f.readlines()
     except Exception:
-        logger.exception("Ошибка чтения proxies.txt")
+        logger.exception("ГЋГёГЁГЎГЄГ  Г·ГІГҐГ­ГЁГї proxies.txt")
         return
         
     seen_proxies = {}
@@ -673,7 +673,7 @@ async def main():
         try:
             parsed = parse_proxy_line(original_line)
         except Exception:
-            logger.exception("Ошибка парсинга строки %d", line_no)
+            logger.exception("ГЋГёГЁГЎГЄГ  ГЇГ Г°Г±ГЁГ­ГЈГ  Г±ГІГ°Г®ГЄГЁ %d", line_no)
             continue
             
         if not parsed: continue
@@ -682,25 +682,25 @@ async def main():
             host, port = get_proxy_endpoint(parsed)
             ok, reason = validate_proxy_endpoint(host, port)
             if not ok:
-                logger.warning("Строка %d отклонена валидатором: %s", line_no, reason)
+                logger.warning("Г‘ГІГ°Г®ГЄГ  %d Г®ГІГЄГ«Г®Г­ГҐГ­Г  ГўГ Г«ГЁГ¤Г ГІГ®Г°Г®Г¬: %s", line_no, reason)
                 continue
                 
         key = parsed['normalized_key']
         if key in seen_proxies:
             duplicates_count += 1
-            logger.debug("Дубликат на строке %d", line_no)
+            logger.debug("Г„ГіГЎГ«ГЁГЄГ ГІ Г­Г  Г±ГІГ°Г®ГЄГҐ %d", line_no)
         else:
             seen_proxies[key] = parsed['output_format']
             unique_proxy_list.append(parsed)
             
     if duplicates_count > 0:
-        logger.info("Дедупликация: найдено %d, оставлено %d", duplicates_count, len(unique_proxy_list))
+        logger.info("Г„ГҐГ¤ГіГЇГ«ГЁГЄГ Г¶ГЁГї: Г­Г Г©Г¤ГҐГ­Г® %d, Г®Г±ГІГ ГўГ«ГҐГ­Г® %d", duplicates_count, len(unique_proxy_list))
         
     if not unique_proxy_list:
-        logger.warning("Нет валидных прокси для проверки.")
+        logger.warning("ГЌГҐГІ ГўГ Г«ГЁГ¤Г­Г»Гµ ГЇГ°Г®ГЄГ±ГЁ Г¤Г«Гї ГЇГ°Г®ГўГҐГ°ГЄГЁ.")
         return
         
-    logger.info("Загружено %d уникальных прокси. Начинаем тест...", len(unique_proxy_list))
+    logger.info("Г‡Г ГЈГ°ГіГ¦ГҐГ­Г® %d ГіГ­ГЁГЄГ Г«ГјГ­Г»Гµ ГЇГ°Г®ГЄГ±ГЁ. ГЌГ Г·ГЁГ­Г ГҐГ¬ ГІГҐГ±ГІ...", len(unique_proxy_list))
     
     results = []
     completed_all = True
@@ -710,7 +710,7 @@ async def main():
         results.append(res)
         
         if res.get('status') in ('unauthorized', 'banned'):
-            logger.critical("Сессия недействительна или аккаунт забанен. Остановка тестов.")
+            logger.critical("Г‘ГҐГ±Г±ГЁГї Г­ГҐГ¤ГҐГ©Г±ГІГўГЁГІГҐГ«ГјГ­Г  ГЁГ«ГЁ Г ГЄГЄГ ГіГ­ГІ Г§Г ГЎГ Г­ГҐГ­. ГЋГ±ГІГ Г­Г®ГўГЄГ  ГІГҐГ±ГІГ®Гў.")
             completed_all = False
             break
             
@@ -719,7 +719,7 @@ async def main():
             
     if not results: return
     
-    logger.info("Сортировка результатов...")
+    logger.info("Г‘Г®Г°ГІГЁГ°Г®ГўГЄГ  Г°ГҐГ§ГіГ«ГјГІГ ГІГ®Гў...")
     results.sort(key=lambda x: (x['speed'] >= 0, x['speed'], -x['conn_time']), reverse=True)
     
     if completed_all:
@@ -729,17 +729,17 @@ async def main():
                 text = "\n".join(str(r.get('output_format', '')) for r in results if r.get('output_format')) + "\n"
                 try:
                     atomic_write_text(PROXIES_PATH, text, PROXIES_ENCODING)
-                    logger.info("proxies.txt перезаписан атомарно.")
+                    logger.info("proxies.txt ГЇГҐГ°ГҐГ§Г ГЇГЁГ±Г Г­ Г ГІГ®Г¬Г Г°Г­Г®.")
                 except Exception:
-                    logger.exception("Ошибка записи proxies.txt")
+                    logger.exception("ГЋГёГЁГЎГЄГ  Г§Г ГЇГЁГ±ГЁ proxies.txt")
                     
         fastest = get_fastest_standard_proxy(results)
         if fastest and fastest.get('raw'):
             update_config_yaml(fastest['raw'])
         else:
-            logger.info("Подходящий socks4/socks5/http прокси не найден.")
+            logger.info("ГЏГ®Г¤ГµГ®Г¤ГїГ№ГЁГ© socks4/socks5/http ГЇГ°Г®ГЄГ±ГЁ Г­ГҐ Г­Г Г©Г¤ГҐГ­.")
             
-    logger.info("--- Итоги ---")
+    logger.info("--- Г€ГІГ®ГЈГЁ ---")
     for res in results:
         if res.get('status') == 'ok':
             status_text = f"{res.get('speed', 0.0):.2f} Mbps"
@@ -750,16 +750,16 @@ async def main():
 def main_sync() -> int:
     setup_logging(logging.INFO)
     if not acquire_lock(LOCK_FILE):
-        logger.error("Запущена другая копия скрипта. Выход.")
+        logger.error("Г‡Г ГЇГіГ№ГҐГ­Г  Г¤Г°ГіГЈГ Гї ГЄГ®ГЇГЁГї Г±ГЄГ°ГЁГЇГІГ . Г‚Г»ГµГ®Г¤.")
         return 1
     try:
         asyncio.run(main())
         return 0
     except KeyboardInterrupt:
-        logger.info("Остановлено пользователем.")
+        logger.info("ГЋГ±ГІГ Г­Г®ГўГ«ГҐГ­Г® ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«ГҐГ¬.")
         return 1
     except Exception:
-        logger.exception("Фатальная ошибка.")
+        logger.exception("Г”Г ГІГ Г«ГјГ­Г Гї Г®ГёГЁГЎГЄГ .")
         return 1
     finally:
         release_lock()
